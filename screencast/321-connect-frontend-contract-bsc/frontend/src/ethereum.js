@@ -1,18 +1,57 @@
-import detectEthereumProvider from '@metamask/detect-provider';
 import { ethers, Contract } from 'ethers';
-import SimpleStorage from './contracts/SimpleStorage.json';
+const { LedgerSigner } = require('@ethersproject/hardware-wallets')
 
 const getBlockchain = () =>
   new Promise( async (resolve, reject) => {
-    let provider = await detectEthereumProvider();
+    const provider = new ethers.providers.JsonRpcProvider('https://data-seed-prebsc-1-s1.binance.org:8545/');
+    // const signer = provider.getSigner("0x63E891Eae83A51812E8139f3f5bFC94c2672DD52");
+    console.log(LedgerSigner);
+    const signer = new LedgerSigner(provider,'hid')
+
     if(provider) {
-      await provider.request({ method: 'eth_requestAccounts' });
-      const networkId = await provider.request({ method: 'net_version' })
-      provider = new ethers.providers.Web3Provider(provider);
-      const signer = provider.getSigner();
       const simpleStorage = new Contract(
-        SimpleStorage.networks[networkId].address,
-        SimpleStorage.abi,
+        "0x6DA3b94B717c4DCacCF2933Bc7F41a7892031477",
+        [
+          {
+            "inputs": [],
+            "name": "data",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "readData",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_data",
+                "type": "uint256"
+              }
+            ],
+            "name": "updateData",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ],
         signer
       );
       resolve({simpleStorage});

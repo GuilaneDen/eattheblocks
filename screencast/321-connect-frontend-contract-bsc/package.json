@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ethersproject/hardware-wallets": "^5.5.0",
+    "@ledgerhq/hw-app-eth": "^6.18.0",
+    "@ledgerhq/hw-transport-webhid": "^6.11.2",
     "@truffle/hdwallet-provider": "^1.2.3"
   }
 }
